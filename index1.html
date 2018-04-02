@@ -1,0 +1,25 @@
+<!-- Here we have the underpinnings of React:
+React.createElement takes a type of element to be created,
+an object with the properties of that element -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>First one!</title>
+  </head>
+  <body>
+    <div id='root'>
+    </div>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script type="text/javascript">
+    const rootElement = document.getElementById('root');
+const element = React.createElement('div', {
+	className: 'container',
+	children: 'Hello World'
+});
+console.log(element);
+ReactDOM.render(element, rootElement);
+</script>
+  </body>
+</html>

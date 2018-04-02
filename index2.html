@@ -1,0 +1,42 @@
+<!-- React with JSX -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>React with JSX!</title>
+  </head>
+  <body>
+    <div id='root'>
+    </div>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script crossorigin src='https://unpkg.com/babel-standalone@6.26.0/babel.min.js'></script>
+<script type="text/babel">
+const rootElement = document.getElementById('root');
+const content = 'Hey There';
+const element = <div className="container">{content}</div>;
+// inside curly bracers, we 'exit react-land' and enter javascript World
+// we can enter any valid JS inside those brackets as long as they are a valid
+// JS expression
+const content2 = 'New Thing to try';
+const myClassName = 'not-this';
+const props = {
+	className: 'container',
+	children: 'It is new to me'
+};
+const element2 = <div {...props} />;
+// override or default attributes:
+// any attributes written into your JSX BEFORE your props object will be overridden
+// attributes written after your object spread will take precedence
+const element3 = (
+	<div className="overridden by props" children="Doesnt matter" {...props} />
+);
+const element4 = (
+	<div {...props} className="Totes New" children="The New Stuff" />
+);
+// render different elemnts to get various outputs
+ReactDOM.render(element4, rootElement);
+</script>
+  </body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>React with JSX!</title>
+  </head>
+  <body>
+    <div id='root'>
+    </div>
+    <div id='root2'>
+    </div>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script crossorigin src='https://unpkg.com/babel-standalone@6.26.0/babel.min.js'></script>
+    <script crossorigin src='https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.6.1/prop-types.js'></script>
+<script type="text/babel">
+// Lesson 17: Using the key prop when rendering a list
+const rootElement = document.getElementById('root');
+const rootElement2 = document.getElementById('root2');
+
+class App extends React.Component {
+	static allItems = [
+		{ id: 'a', value: 'apple' },
+		{ id: 'o', value: 'orange' },
+		{ id: 'g', value: 'grape' },
+		{ id: 'p', value: 'pear' }
+	];
+	state = { items: [] };
+	addItem = () => {
+		this.setState(({ items }) => ({
+			items: [...items, App.allItems.find(i => !items.includes(i))]
+		}));
+	};
+	removeItem = item => {
+		this.setState(({ items }) => ({
+			items: items.filter(i => i !== item)
+		}));
+	};
+
+	render() {
+		const { items } = this.state;
+		return (
+			<div>
+				<button
+					disabled={items.length >= App.allItems.length}
+					onClick={this.addItem}
+				>
+					{' '}
+					+
+				</button>
+				{items.map((i, index) => (
+					<div key={i.id}>
+						<button onClick={() => this.removeItem(i)}>-</button>
+						{i.value}:
+						<input />
+					</div>
+				))}
+			</div>
+		);
+	}
+}
+//  ---------------------------------------------------------
+class FocusDemo extends React.Component {
+	state = {
+		items: [
+			{ id: 'a', value: 'apple' },
+			{ id: 'o', value: 'orange' },
+			{ id: 'g', value: 'grape' },
+			{ id: 'p', value: 'pear' }
+		]
+	};
+	componentDidMount() {
+		setInterval(this.randomizeItems, 1000);
+	}
+	randomizeItems = () => {
+		this.setState(({ items }) => ({
+			items: shuffle(items)
+		}));
+	};
+	render() {
+		return (
+			<div>
+				<div>
+					<h1>Without Key</h1>
+					{this.state.items.map(item => <input value={item.value} />)}
+				</div>
+				<div>
+					<h1>With Key as Index</h1>
+					{this.state.items.map((item, index) => (
+						<input key={index} value={item.value} />
+					))}
+				</div>
+				<div>
+					<h1>With Key (id)</h1>
+					{this.state.items.map(item => (
+						<input key={item.id} value={item.value} />
+					))}
+				</div>
+			</div>
+		);
+	}
+}
+
+// React Warnings for Keys and prop types
+// --------------------
+// "Warning: Each child in an array or iterator should have a unique \"key\" prop.
+//
+// Check the render method of `FocusDemo`. See https://fb.me/react-warning-keys for more information.
+//     in input (created by FocusDemo)
+//     in FocusDemo"
+// "Warning: Failed prop type: You provided a `value` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultValue`. Otherwise, set either `onChange` or `readOnly`.
+//     in input (created by FocusDemo)
+//     in div (created by FocusDemo)
+//     in div (created by FocusDemo)
+//     in FocusDemo"
+// --------------------
+// Summary: React needs items in arrays or iterators to have Keys
+// in order to correctly determine the element.
+// Creating a form field with a value prop makes the field read-only
+// Use 'defaultValue' if the field needs to be mutable.
+
+function shuffle(array) {
+	var currentIndex = array.length,
+		temporaryValue,
+		randomIndex;
+
+	// While there remain elements to shuffle...
+	while (0 !== currentIndex) {
+		// Pick a remaining element
+		randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex -= 1;
+		// and swap it with the current element
+		temporaryValue = array[currentIndex];
+		array[currentIndex] = array[randomIndex];
+		array[randomIndex] = temporaryValue;
+	}
+	return array;
+}
+ReactDOM.render(<App />, rootElement);
+ReactDOM.render(<FocusDemo />, rootElement2);
+</script>
+  </body>
+</html>

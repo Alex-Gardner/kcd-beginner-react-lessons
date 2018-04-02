@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>React with JSX!</title>
+  </head>
+  <body>
+    <div id='root'>
+    </div>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script crossorigin src='https://unpkg.com/babel-standalone@6.26.0/babel.min.js'></script>
+    <script crossorigin src='https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.6.1/prop-types.js'></script>
+    <script src="https://unpkg.com/axios@0.16.2/dist/axios.min.js"></script>
+<script type="text/babel">
+// Lesson 18: Make HTTP Requests with React (with axios)
+const rootElement = document.getElementById('root');
+
+class UserCompany extends React.Component {
+	state = { company: undefined, loaded: false };
+	componentDidMount() {
+		axios({
+			url: 'https://api.github.com/graphql',
+			method: 'post',
+			data: {
+				query: `{
+          user(login: "${this.props.username}") {
+            company
+          }
+        }`
+			},
+			// This token is for user read-only data from Github
+			headers: {
+				Authorization: `bearer e688528aa8c4bd275511b31bd32953e49d10212d`
+			}
+		}).then(
+			response => {
+				this.setState({
+					loaded: true,
+					company: response.data.data.user.company
+				});
+			},
+			error => {
+				this.setState({
+					error,
+					loaded: true
+				});
+			}
+		);
+	}
+	render() {
+		return this.state.loaded ? this.state.company || 'Unknown' : '...';
+	}
+}
+const username = 'kentcdodds';
+const element = (
+	<div>
+		<div>
+			{`@${username} works at `} <UserCompany username={username} />
+		</div>
+	</div>
+);
+ReactDOM.render(element, rootElement);
+</script>
+  </body>
+</html>
